@@ -1,8 +1,8 @@
 module.exports = {	
 	devServer: {
 		proxy: {
-			'/clothes': {
-				target: 'http://test_sample.92nu.com',
+			'/admin': {
+				target: 'http://supply.92nu.com',
 				ws: true,
 				changOlrigin: true,		
 			}

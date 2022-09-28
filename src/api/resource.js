@@ -1,16 +1,11 @@
 import http from './request.js'
 let path = {	
-	getConfig:'ding/getConfig',						//获取钉钉鉴权信息
-	dingAuth:'ding/auth',							//钉钉鉴权
+	getAddress:'open/getsupplierlocation',		//获取所有供应商位置
 }								
 export default{
-	//获取钉钉鉴权信息
-	getConfig(params){
-		return http.get(path.getConfig, params)
-	},
-	//钉钉鉴权
-	dingAuth(params){
-		return http.get(path.dingAuth, params)
+	//获取所有供应商位置
+	getAddress(params){
+		return http.get(path.getAddress, params)
 	},
 }
 

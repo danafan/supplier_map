@@ -11,35 +11,24 @@
 	export default{
 		data(){
 			return{
-				address_list:[{
-					name:'上海',
-					lng_lat:[121.472644,31.231706]
-				},{
-					name:'嘉兴',
-					lng_lat:[120.750865,30.762653]
-				},{
-					name:'湖州',
-					lng_lat:[120.102398,30.867198]
-				},{
-					name:'绍兴',
-					lng_lat:[120.582112,29.997117]
-				}],									//地址列表
-				longitude:120.25521240234374,
-				latitude:30.229253743489583,
+				address_list:[],									//地址列表
 			}
-		},
-		created(){
-			
 		},
 		mounted(){
 			//获取钉钉鉴权信息
 			// this.getConfig();
-			this.ddd();
-			
-			
+			//获取供应商地址
+			this.getAddress();
 		},
 		methods:{
-			ddd(){
+			//获取供应商地址
+			getAddress(){
+				resource.getAddress().then(res => {
+					this.address_list = res.data;
+					this.setMarket();
+				})
+			},
+			setMarket(){
 				//点击某一个地点去导航
 				var clickMarkers  =  (e) => {
 					let index = e.originEvent.target.id.split('_')[1];
@@ -51,6 +40,7 @@
 				var map = new AMap.Map('container', {
 					resizeEnable: true
 				});
+
 				AMap.plugin('AMap.Geolocation', function() {
 					var geolocation = new AMap.Geolocation({
 			            enableHighAccuracy: true,//是否使用高精度定位，默认:true
@@ -74,12 +64,19 @@
 			    	var markerList = [];
 					// 标记所有供应商位置
 					this.address_list.map((item,index) => {
-						var content = `<div id="marker_${index}" style="background:#ffffff;color:red;padding:5px 10px;white-space: nowrap;">${item.name}</div>`;
+						var content = `<div id="marker_${index}" style="background:#ffffff;color:#333333;padding:5px 10px;white-space: nowrap;">${item.name}</div>`;
 						var marker_item = new AMap.Marker({
-							content: content,
+							icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+							anchor:'bottom-center',
+							offset: new AMap.Pixel(0, 0),
 							position: item.lng_lat,  
 							title: item.name
 						});
+						marker_item.setLabel({
+							direction:'right',
+				        offset: new AMap.Pixel(0, 0),  //设置文本标注偏移量
+				        content: content, //设置文本标注内容
+				    });
 						markerList.push(marker_item)
 						marker_item.on('click',clickMarkers)
 					})
@@ -179,6 +176,23 @@
 		}
 	}
 </script>
+<style type="text/css">
+.amap-icon{
+	position: relative!important;
+	width: 25px!important;
+	height: 34px!important;
+}
+.amap-icon img{
+	position: absolute!important;
+	top: 0!important;
+	left: 0!important;
+	width: 100%!important;
+	height: 100%!important;
+}
+.amap-marker-label{
+	border:none!important;
+}
+</style>
 <style scoped>
 .container{
 	position: absolute;
@@ -186,5 +200,7 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
+
 }
+
 </style>
